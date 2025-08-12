@@ -46,7 +46,7 @@ public class CometProcessBuilder extends SearchGUIProcessBuilder {
     /**
      * The Comet version number as a string.
      */
-    private final String COMET_VERSION = "2025.01 rev. 1"; // @TODO: extract from the comet usage details?
+    private final String COMET_VERSION = "2025.02 rev. 0"; // @TODO: extract from the comet usage details?
     /**
      * The spectrum file.
      */
@@ -393,6 +393,7 @@ public class CometProcessBuilder extends SearchGUIProcessBuilder {
                     + "max_duplicate_proteins = 0             # maximum number of protein names to report for each peptide identification; -1 reports all duplicates" + System.getProperty("line.separator") // @TODO: implement?
                     + "skip_researching = 1                   # for '.out' file output only, 0=search everything again (default), 1=don't search if .out exists" + System.getProperty("line.separator")
                     + "max_fragment_charge = " + cometParameters.getMaxFragmentCharge() + "                 # set maximum fragment charge state to analyze (allowed max 5)" + System.getProperty("line.separator")
+                    + "min_precursor_charge = " + searchParameters.getMinChargeSearched() + "                 # set minimum precursor charge state to analyze" + System.getProperty("line.separator")
                     + "max_precursor_charge = " + searchParameters.getMaxChargeSearched() + "                 # set maximum precursor charge state to analyze (allowed max 9)" + System.getProperty("line.separator")
                     + "nucleotide_reading_frame = 0           # 0=proteinDB, 1-6, 7=forward three, 8=reverse three, 9=all six" + System.getProperty("line.separator")
                     + "clip_nterm_methionine = " + clip_nterm_methionine + "                 # 0=leave sequences as-is; 1=also consider sequence w/o N-term methionine" + System.getProperty("line.separator")

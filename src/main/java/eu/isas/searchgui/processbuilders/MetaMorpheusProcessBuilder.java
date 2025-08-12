@@ -132,6 +132,7 @@ public class MetaMorpheusProcessBuilder extends SearchGUIProcessBuilder {
         FileUtils.copyDirectory(new File(metaMorpheusFolder, "Data"), new File(metaMorpheusTempFolder, "Data"));
         FileUtils.copyDirectory(new File(metaMorpheusFolder, "Glycan_Mods"), new File(metaMorpheusTempFolder, "Glycan_Mods"));
         FileUtils.copyDirectory(new File(metaMorpheusFolder, "Mods"), new File(metaMorpheusTempFolder, "Mods"));
+        FileUtils.copyDirectory(new File(metaMorpheusFolder, "Digestion"), new File(metaMorpheusTempFolder, "Digestion"));
 
         // create the custom modifications file
         File metaMorpheusModFile = new File(metaMorpheusTempFolder, "Mods" + File.separator + "CustomModifications.txt");

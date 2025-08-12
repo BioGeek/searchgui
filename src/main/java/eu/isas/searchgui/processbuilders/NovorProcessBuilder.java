@@ -179,7 +179,7 @@ public class NovorProcessBuilder extends SearchGUIProcessBuilder {
      */
     private void createParameterFile() {
 
-        // get the Novoe specific parameters
+        // get the Novor specific parameters
         NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
 
         try (BufferedWriter bufferedParameterWriter = new BufferedWriter(new FileWriter(novorTempFolder.getAbsolutePath() + File.separator + parameterFileName))) {
