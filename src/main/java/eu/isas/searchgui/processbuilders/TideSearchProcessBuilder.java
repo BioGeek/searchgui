@@ -59,7 +59,7 @@ public class TideSearchProcessBuilder extends SearchGUIProcessBuilder {
             ExceptionHandler exceptionHandler,
             int nThreads
     ) throws IOException {
-        
+
         ///////////////////////////////////////////////////
         // the following Tide options are not implemented:
         //  --use-tailor-calibration
@@ -77,10 +77,11 @@ public class TideSearchProcessBuilder extends SearchGUIProcessBuilder {
         //  --use-z-line
         //  --peptide-centric-search
         //  --scan-number
+        //  --mztab-output
+        //  (all param-medic options options)
         //
         //  see http://crux.ms/commands/tide-search.html
         ///////////////////////////////////////////////////
-
         this.waitingHandler = waitingHandler;
         this.exceptionHandler = exceptionHandler;
         this.tideTempFolder = tideTempFolder;
@@ -94,14 +95,6 @@ public class TideSearchProcessBuilder extends SearchGUIProcessBuilder {
         // full path to executable
         process_name_array.add(tide.getAbsolutePath());
         process_name_array.add("tide-search");
-
-        // compute sp cores
-        process_name_array.add("--compute-sp");
-        if (tideParameters.getComputeSpScore()) {
-            process_name_array.add("T");
-        } else {
-            process_name_array.add("F");
-        }
 
         // link to the spectrum file
         process_name_array.add(spectrumFile.getAbsolutePath());
@@ -132,13 +125,9 @@ public class TideSearchProcessBuilder extends SearchGUIProcessBuilder {
         process_name_array.add("--fileroot");
         process_name_array.add(IoUtil.removeExtension(spectrumFile.getName()));
 
-        // calculate p-values
-        process_name_array.add("--exact-p-value");
-        if (tideParameters.getComputeExactPValues()) {
-            process_name_array.add("T");
-        } else {
-            process_name_array.add("F");
-        }
+        // set the score function
+        process_name_array.add("--score-function");
+        process_name_array.add("" + tideParameters.getScoreFunction());
 
         // set the output directory
         process_name_array.add("--output-dir");
@@ -158,9 +147,21 @@ public class TideSearchProcessBuilder extends SearchGUIProcessBuilder {
         process_name_array.add("--min-peaks");
         process_name_array.add(tideParameters.getMinSpectrumPeaks().toString());
 
+        // min precursor charge
+        process_name_array.add("--min-precursor-charge");
+        process_name_array.add("" + searchParameters.getMinChargeSearched());
+
         // max precursor charge
         process_name_array.add("--max-precursor-charge");
         process_name_array.add("" + searchParameters.getMaxChargeSearched());
+
+        // override charges
+        process_name_array.add("--override-charges");
+        if (tideParameters.getOverrideCharges()) {
+            process_name_array.add("T");
+        } else {
+            process_name_array.add("F");
+        }
 
         // remove precusor peak
         process_name_array.add("--remove-precursor-peak");
