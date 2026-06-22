@@ -7879,21 +7879,18 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
 
         }
 
-        boolean databaseRequired = isDatabaseSearchSelected()
-                || peptideShakerCheckBox.isSelected();
+        // a database is only required for database search engines; de novo only runs
+        // (including PeptideShaker post-processing) can be performed without a database
+        boolean databaseRequired = isDatabaseSearchSelected();
 
         if (databaseRequired
                 && (databaseFileTxt.getText() == null || databaseFileTxt.getText().trim().equals(""))) {
 
             if (showMessage && valid) {
 
-                String message = peptideShakerCheckBox.isSelected() && !isDatabaseSearchSelected()
-                        ? "You need to specify a search database when PeptideShaker post-processing is enabled."
-                        : "You need to specify a search database.";
-
                 JOptionPane.showMessageDialog(
                         this,
-                        message,
+                        "You need to specify a search database.",
                         "Search Database Not Found",
                         JOptionPane.WARNING_MESSAGE
                 );
