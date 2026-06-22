@@ -2940,7 +2940,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         panel.add(beamSearchCombo);
         panel.add(new JLabel("Predictions"));
         panel.add(saveAllPredictionsCheckBox);
-        panel.add(new JLabel("Batch size (-1 uses default)"));
+        panel.add(new JLabel("Batch size (-1 uses InstaNovo default)"));
         panel.add(batchSizeSpinner);
         panel.add(new JLabel("Config path"));
         panel.add(configPathTxt);

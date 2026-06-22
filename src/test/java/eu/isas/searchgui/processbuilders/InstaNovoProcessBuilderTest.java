@@ -199,6 +199,7 @@ public class InstaNovoProcessBuilderTest extends TestCase {
         Assert.assertTrue(command.contains("num_beams=5"));
         Assert.assertTrue(command.contains("use_knapsack=false"));
         Assert.assertTrue(command.contains("save_all_predictions=true"));
+        Assert.assertTrue(command.contains("batch_size=" + InstaNovoParameters.DEFAULT_BATCH_SIZE));
         Assert.assertTrue(command.contains("force_cpu=false"));
         Assert.assertTrue(command.contains("log_interval=1"));
         Assert.assertFalse(command.contains("batch_size=-1"));
