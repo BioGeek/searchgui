@@ -35,6 +35,7 @@ import com.compomics.util.gui.UtilitiesGUIDefaults;
 import com.compomics.util.gui.error_handlers.BugReport;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import eu.isas.searchgui.SearchHandler;
+import eu.isas.searchgui.processbuilders.InstaNovoProcessBuilder;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.*;
@@ -7908,6 +7909,8 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                 bw.write(searchHandler.getSageLocation() + System.getProperty("line.separator") + searchHandler.isSageEnabled() + System.getProperty("line.separator"));
                 bw.write("Novor Location:" + System.getProperty("line.separator"));
                 bw.write(searchHandler.getNovorLocation() + System.getProperty("line.separator") + searchHandler.isNovorEnabled() + System.getProperty("line.separator"));
+                bw.write("InstaNovo Location:" + System.getProperty("line.separator"));
+                bw.write(searchHandler.getInstaNovoLocation() + System.getProperty("line.separator") + searchHandler.isInstaNovoEnabled() + System.getProperty("line.separator"));
                 bw.write("DirecTag Location:" + System.getProperty("line.separator"));
                 bw.write(searchHandler.getDirecTagLocation() + System.getProperty("line.separator") + searchHandler.isDirecTagEnabled() + System.getProperty("line.separator"));
                 bw.write("makeblastdb Location:" + System.getProperty("line.separator"));
@@ -8268,6 +8271,29 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                     searchEngineLocation,
                     "Usage: sage.ex",
                     true,
+                    feedBackInDialog
+            );
+
+        } else if (advocate == Advocate.instanovo || advocate == Advocate.instanovoPlus) {
+
+            if (searchEngineLocation != null) {
+
+                File virtualEnvironmentExecutable = new File(searchEngineLocation, ".venv" + File.separator + "bin" + File.separator + InstaNovoProcessBuilder.EXECUTABLE_FILE_NAME);
+                File executable = new File(searchEngineLocation, InstaNovoProcessBuilder.EXECUTABLE_FILE_NAME);
+
+                if (virtualEnvironmentExecutable.exists() || executable.exists()) {
+                    return true;
+                }
+            }
+
+            return validateSearchEngineInstallation(
+                    advocate,
+                    InstaNovoProcessBuilder.EXECUTABLE_FILE_NAME,
+                    "version",
+                    null,
+                    searchEngineLocation,
+                    null,
+                    false,
                     feedBackInDialog
             );
 

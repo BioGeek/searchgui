@@ -31,6 +31,9 @@ false
 Novor Location:
 Not Selected
 false
+InstaNovo Location:
+Not Selected
+false
 DirecTag Location:
 Not Selected
 false

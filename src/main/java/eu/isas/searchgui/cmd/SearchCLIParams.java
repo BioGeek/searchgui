@@ -32,6 +32,9 @@ public enum SearchCLIParams {
     META_MORPHEUS("meta_morpheus", "Turn the MetaMorpheus search on or off (0: off, 1: on, default is '0').", false),
     SAGE("sage", "Turn the Sage search on or off (0: off, 1: on, default is '0').", false),
     NOVOR("novor", "Turn the Novor sequencing on or off (0: off, 1: on, default is '0').", false),
+    INSTANOVO("instanovo", "Turn the InstaNovo sequencing on or off (0: off, 1: on, default is '0').", false),
+    INSTANOVO_PLUS("instanovo_plus", "Turn the standalone InstaNovo+ sequencing on or off (0: off, 1: on, default is '0').", false),
+    INSTANOVO_REFINE("instanovo_refine", "Turn InstaNovo with InstaNovo+ refinement on or off (0: off, 1: on, default is '0').", false),
     DIRECTAG("directag", "Turn the DirecTag sequencing on or off (0: off, 1: on, default is '0').", false),
     OMSSA_LOCATION("omssa_folder", "The folder where OMSSA is installed, defaults to the provided version for the given OS.", false),
     MAKEBLASTDB_LOCATION("makeblastdb_folder", "The folder where makeblastdb is installed, defaults to the provided version for the given OS.", false),
@@ -46,6 +49,7 @@ public enum SearchCLIParams {
     META_MORPHEUS_LOCATION("meta_morpheus_folder", "The folder where MetaMorpheus is installed, defaults to the included version.", false),
     SAGE_LOCATION("sage_folder", "The folder where Sage is installed, defaults to the included version.", false),
     NOVOR_LOCATION("novor_folder", "The folder where Novor is installed, defaults to the included version.", false),
+    INSTANOVO_LOCATION("instanovo_folder", "The folder where InstaNovo is installed, defaults to the included launcher.", false),
     DIRECTAG_LOCATION("directag_folder", "The folder where DirecTag is installed, defaults to the included version.", false),
     MGF_CHECK_SIZE("mgf_check_size", "Turn the mgf size check on or off (0: off, 1: on, default is '0').", false),
     MGF_SPLITTING_LIMIT("mgf_splitting", "The maximum mgf file size in MB before splitting the mgf. Default is '1000'.", false),
@@ -140,6 +144,9 @@ public enum SearchCLIParams {
         output += "-" + String.format(formatter, ANDROMEDA.id) + " " + ANDROMEDA.description + "\n";
         output += "-" + String.format(formatter, META_MORPHEUS.id) + " " + META_MORPHEUS.description + "\n";
         output += "-" + String.format(formatter, NOVOR.id) + " " + NOVOR.description + "\n";
+        output += "-" + String.format(formatter, INSTANOVO.id) + " " + INSTANOVO.description + "\n";
+        output += "-" + String.format(formatter, INSTANOVO_PLUS.id) + " " + INSTANOVO_PLUS.description + "\n";
+        output += "-" + String.format(formatter, INSTANOVO_REFINE.id) + " " + INSTANOVO_REFINE.description + "\n";
         output += "-" + String.format(formatter, DIRECTAG.id) + " " + DIRECTAG.description + "\n";
 
         output += "\n\nTools Location:\n\n";
@@ -154,6 +161,7 @@ public enum SearchCLIParams {
         output += "-" + String.format(formatter, ANDROMEDA_LOCATION.id) + " " + ANDROMEDA_LOCATION.description + "\n";
         output += "-" + String.format(formatter, META_MORPHEUS_LOCATION.id) + " " + META_MORPHEUS_LOCATION.description + "\n";
         output += "-" + String.format(formatter, NOVOR_LOCATION.id) + " " + NOVOR_LOCATION.description + "\n";
+        output += "-" + String.format(formatter, INSTANOVO_LOCATION.id) + " " + INSTANOVO_LOCATION.description + "\n";
         output += "-" + String.format(formatter, DIRECTAG_LOCATION.id) + " " + DIRECTAG_LOCATION.description + "\n";
         output += "-" + String.format(formatter, MAKEBLASTDB_LOCATION.id) + " " + MAKEBLASTDB_LOCATION.description + "\n";
 

@@ -1,0 +1,126 @@
+package eu.isas.searchgui.cmd;
+
+import java.io.File;
+import junit.framework.TestCase;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.junit.Assert;
+
+/**
+ * Tests the InstaNovo SearchCLI integration.
+ *
+ * @author CompOmics
+ */
+public class SearchCLIInstaNovoTest extends TestCase {
+
+    /**
+     * Tests parsing of the InstaNovo command line options.
+     *
+     * @throws Exception if an exception occurs
+     */
+    public void testInstaNovoCliParsing() throws Exception {
+
+        File instaNovoFolder = createFolder("instanovo-cli");
+        CommandLine commandLine = parse(
+                "-spectrum_files", createFile("input", ".mgf").getAbsolutePath(),
+                "-fasta_file", createFile("database", ".fasta").getAbsolutePath(),
+                "-output_folder", createFolder("searchgui-output").getAbsolutePath(),
+                "-instanovo", "1",
+                "-instanovo_plus", "1",
+                "-instanovo_refine", "1",
+                "-instanovo_folder", instaNovoFolder.getAbsolutePath()
+        );
+
+        SearchCLIInputBean inputBean = new SearchCLIInputBean(commandLine);
+
+        Assert.assertTrue(inputBean.isInstaNovoEnabled());
+        Assert.assertTrue(inputBean.isInstaNovoPlusEnabled());
+        Assert.assertTrue(inputBean.isInstaNovoRefineEnabled());
+        Assert.assertEquals(instaNovoFolder.getAbsoluteFile(), inputBean.getInstaNovoLocation().getAbsoluteFile());
+    }
+
+    /**
+     * Tests validation and help listing of the InstaNovo command line options.
+     *
+     * @throws Exception if an exception occurs
+     */
+    public void testInstaNovoCliValidationAndHelp() throws Exception {
+
+        CommandLine invalidBoolean = parse(
+                "-spectrum_files", createFile("input", ".mgf").getAbsolutePath(),
+                "-fasta_file", createFile("database", ".fasta").getAbsolutePath(),
+                "-output_folder", createFolder("searchgui-output").getAbsolutePath(),
+                "-instanovo", "2"
+        );
+        Assert.assertFalse(SearchCLIInputBean.isValidStartup(invalidBoolean));
+
+        CommandLine missingFolder = parse(
+                "-spectrum_files", createFile("input", ".mgf").getAbsolutePath(),
+                "-fasta_file", createFile("database", ".fasta").getAbsolutePath(),
+                "-output_folder", createFolder("searchgui-output").getAbsolutePath(),
+                "-instanovo_folder", new File(createFolder("missing-parent"), "missing").getAbsolutePath()
+        );
+        Assert.assertFalse(SearchCLIInputBean.isValidStartup(missingFolder));
+
+        String help = SearchCLIParams.getOptionsAsString();
+        Assert.assertTrue(help.contains("-instanovo"));
+        Assert.assertTrue(help.contains("-instanovo_plus"));
+        Assert.assertTrue(help.contains("-instanovo_refine"));
+        Assert.assertTrue(help.contains("-instanovo_folder"));
+    }
+
+    /**
+     * Parses command line arguments.
+     *
+     * @param args the command line arguments
+     *
+     * @return the parsed command line
+     *
+     * @throws Exception if an exception occurs
+     */
+    private CommandLine parse(String... args) throws Exception {
+
+        Options options = new Options();
+        SearchCLIParams.createOptionsCLI(options);
+
+        return new DefaultParser().parse(options, args);
+    }
+
+    /**
+     * Creates a temporary file.
+     *
+     * @param prefix the prefix
+     * @param suffix the suffix
+     *
+     * @return the file
+     *
+     * @throws Exception if an exception occurs
+     */
+    private File createFile(String prefix, String suffix) throws Exception {
+
+        File file = File.createTempFile(prefix, suffix);
+        file.deleteOnExit();
+
+        return file;
+    }
+
+    /**
+     * Creates a temporary folder.
+     *
+     * @param prefix the prefix
+     *
+     * @return the folder
+     *
+     * @throws Exception if an exception occurs
+     */
+    private File createFolder(String prefix) throws Exception {
+
+        File folder = File.createTempFile(prefix, "");
+        folder.delete();
+        folder.mkdirs();
+        folder.deleteOnExit();
+
+        return folder;
+    }
+}
