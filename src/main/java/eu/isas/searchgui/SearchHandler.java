@@ -587,6 +587,8 @@ public class SearchHandler {
                 false,
                 false
         );
+        enableInstaNovoPlus = loadBooleanConfigurationValue("InstaNovo+ Enabled:", false);
+        enableInstaNovoRefine = loadBooleanConfigurationValue("InstaNovo Refinement Enabled:", false);
 
         enableDirecTag = loadSearchEngineLocation(
                 Advocate.direcTag,
@@ -1447,6 +1449,45 @@ public class SearchHandler {
         }
 
         return enableSearchEngine;
+
+    }
+
+    /**
+     * Loads an optional boolean value from the SearchGUI configuration file.
+     *
+     * @param key the configuration key
+     * @param defaultValue the default value
+     *
+     * @return the configured boolean value
+     */
+    private boolean loadBooleanConfigurationValue(String key, boolean defaultValue) {
+
+        File folder = new File(getJarFilePath() + File.separator + "resources" + File.separator + "conf" + File.separator);
+        File input = new File(folder, SEARCHGUI_CONFIGURATION_FILE);
+
+        if (!input.exists()) {
+            return defaultValue;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(input))) {
+
+            String line;
+
+            while ((line = br.readLine()) != null) {
+
+                if (line.trim().equals(key)) {
+
+                    String value = br.readLine();
+                    return value == null ? defaultValue : Boolean.parseBoolean(value.trim());
+
+                }
+            }
+
+        } catch (IOException e) {
+            return defaultValue;
+        }
+
+        return defaultValue;
 
     }
 
