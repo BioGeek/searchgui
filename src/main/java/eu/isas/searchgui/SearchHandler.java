@@ -23,6 +23,8 @@ import com.compomics.util.io.compression.ZipUtils;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.CometParameters;
+import com.compomics.util.parameters.identification.tool_specific.InstaNovoParameters;
+import com.compomics.util.parameters.identification.tool_specific.InstaNovoPlusParameters;
 import com.compomics.util.parameters.identification.tool_specific.MsAmandaParameters;
 import com.compomics.util.parameters.identification.tool_specific.MyriMatchParameters;
 import com.compomics.util.parameters.identification.tool_specific.OmssaParameters;
@@ -1650,6 +1652,30 @@ public class SearchHandler {
      */
     public static String getInstaNovoRefinedFileName(String spectrumFileName) {
         return IoUtil.removeExtension(spectrumFileName) + ".instanovo.refined.csv";
+    }
+
+    /**
+     * Returns the InstaNovo parameters.
+     *
+     * @return the InstaNovo parameters
+     */
+    private InstaNovoParameters getInstaNovoParameters() {
+
+        Object parameters = identificationParameters.getSearchParameters().getIdentificationAlgorithmParameter(Advocate.instanovo.getIndex());
+        return parameters instanceof InstaNovoParameters ? (InstaNovoParameters) parameters : new InstaNovoParameters();
+
+    }
+
+    /**
+     * Returns the InstaNovo+ parameters.
+     *
+     * @return the InstaNovo+ parameters
+     */
+    private InstaNovoPlusParameters getInstaNovoPlusParameters() {
+
+        Object parameters = identificationParameters.getSearchParameters().getIdentificationAlgorithmParameter(Advocate.instanovoPlus.getIndex());
+        return parameters instanceof InstaNovoPlusParameters ? (InstaNovoPlusParameters) parameters : new InstaNovoPlusParameters();
+
     }
 
     /**
@@ -4014,6 +4040,7 @@ public class SearchHandler {
                                 spectrumFile,
                                 instaNovoOutputFile,
                                 InstaNovoProcessBuilder.Mode.transformer,
+                                getInstaNovoParameters(),
                                 waitingHandler,
                                 exceptionHandler
                         );
@@ -4049,6 +4076,7 @@ public class SearchHandler {
                                 spectrumFile,
                                 instaNovoPlusOutputFile,
                                 InstaNovoProcessBuilder.Mode.diffusion,
+                                getInstaNovoPlusParameters(),
                                 waitingHandler,
                                 exceptionHandler
                         );
@@ -4084,6 +4112,7 @@ public class SearchHandler {
                                 spectrumFile,
                                 instaNovoRefinedOutputFile,
                                 InstaNovoProcessBuilder.Mode.refined,
+                                getInstaNovoParameters(),
                                 waitingHandler,
                                 exceptionHandler
                         );

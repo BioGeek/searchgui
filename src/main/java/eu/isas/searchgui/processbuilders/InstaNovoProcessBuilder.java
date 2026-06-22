@@ -48,6 +48,7 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
      * @param spectrumFile the spectrum file
      * @param outputFile the output file
      * @param mode the mode
+     * @param instaNovoParameters the InstaNovo parameters
      * @param waitingHandler the waiting handler
      * @param exceptionHandler the exception handler
      */
@@ -56,6 +57,7 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
             File spectrumFile,
             File outputFile,
             Mode mode,
+            InstaNovoParameters instaNovoParameters,
             WaitingHandler waitingHandler,
             ExceptionHandler exceptionHandler
     ) {
@@ -65,6 +67,10 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
         this.mode = mode;
         this.waitingHandler = waitingHandler;
         this.exceptionHandler = exceptionHandler;
+
+        if (instaNovoParameters == null) {
+            instaNovoParameters = new InstaNovoParameters();
+        }
 
         File executableFile = getExecutable(instaNovoFolder);
         process_name_array.add(executableFile.getPath());
@@ -87,12 +93,12 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
 
         if (mode == Mode.transformer || mode == Mode.refined) {
             process_name_array.add("--instanovo-model");
-            process_name_array.add(InstaNovoParameters.DEFAULT_INSTANOVO_MODEL);
+            process_name_array.add(instaNovoParameters.getInstaNovoModel());
         }
 
         if (mode == Mode.diffusion || mode == Mode.refined) {
             process_name_array.add("--instanovo-plus-model");
-            process_name_array.add(InstaNovoParameters.DEFAULT_INSTANOVO_PLUS_MODEL);
+            process_name_array.add(instaNovoParameters.getInstaNovoPlusModel());
         }
 
         if (mode == Mode.diffusion) {
@@ -100,6 +106,21 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
         } else if (mode == Mode.refined) {
             process_name_array.add("--with-refinement");
         }
+
+        if (instaNovoParameters.getConfigFile() != null && !instaNovoParameters.getConfigFile().trim().isEmpty()) {
+            process_name_array.add("--config-path");
+            process_name_array.add(instaNovoParameters.getConfigFile());
+        }
+
+        process_name_array.add("num_beams=" + instaNovoParameters.getNumberOfBeams());
+        process_name_array.add("use_knapsack=" + Boolean.toString(instaNovoParameters.isUseKnapsack()));
+        process_name_array.add("save_all_predictions=" + Boolean.toString(instaNovoParameters.isSaveAllPredictions()));
+
+        if (instaNovoParameters.getBatchSize() > 0) {
+            process_name_array.add("batch_size=" + instaNovoParameters.getBatchSize());
+        }
+
+        process_name_array.add("force_cpu=" + Boolean.toString(instaNovoParameters.isForceCpu()));
 
         process_name_array.trimToSize();
 

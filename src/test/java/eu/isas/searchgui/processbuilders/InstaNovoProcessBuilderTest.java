@@ -24,8 +24,10 @@ public class InstaNovoProcessBuilderTest extends TestCase {
         File spectrumFile = createFile("input", ".mgf");
         File outputFile = createFile("output", ".csv");
 
+        InstaNovoParameters defaultParameters = new InstaNovoParameters();
+
         assertCommand(
-                new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, InstaNovoProcessBuilder.Mode.transformer, null, null).getCommand(),
+                new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, InstaNovoProcessBuilder.Mode.transformer, defaultParameters, null, null).getCommand(),
                 instaNovoFolder,
                 spectrumFile,
                 outputFile,
@@ -39,7 +41,7 @@ public class InstaNovoProcessBuilderTest extends TestCase {
         );
 
         assertCommand(
-                new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, InstaNovoProcessBuilder.Mode.diffusion, null, null).getCommand(),
+                new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, InstaNovoProcessBuilder.Mode.diffusion, defaultParameters, null, null).getCommand(),
                 instaNovoFolder,
                 spectrumFile,
                 outputFile,
@@ -53,7 +55,7 @@ public class InstaNovoProcessBuilderTest extends TestCase {
         );
 
         assertCommand(
-                new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, InstaNovoProcessBuilder.Mode.refined, null, null).getCommand(),
+                new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, InstaNovoProcessBuilder.Mode.refined, defaultParameters, null, null).getCommand(),
                 instaNovoFolder,
                 spectrumFile,
                 outputFile,
@@ -65,6 +67,36 @@ public class InstaNovoProcessBuilderTest extends TestCase {
                 "--with-refinement",
                 "--instanovo-plus-model"
         );
+
+        InstaNovoParameters advancedParameters = new InstaNovoParameters();
+        advancedParameters.setInstaNovoModel("instanovo-custom");
+        advancedParameters.setInstaNovoPlusModel("instanovoplus-custom");
+        advancedParameters.setConfigFile("custom-config");
+        advancedParameters.setNumberOfBeams(17);
+        advancedParameters.setUseKnapsack(true);
+        advancedParameters.setSaveAllPredictions(false);
+        advancedParameters.setBatchSize(64);
+        advancedParameters.setForceCpu(true);
+
+        List<String> advancedCommand = new InstaNovoProcessBuilder(
+                instaNovoFolder,
+                spectrumFile,
+                outputFile,
+                InstaNovoProcessBuilder.Mode.refined,
+                advancedParameters,
+                null,
+                null
+        ).getCommand();
+
+        Assert.assertTrue(advancedCommand.contains("--config-path"));
+        Assert.assertTrue(advancedCommand.contains("custom-config"));
+        Assert.assertTrue(advancedCommand.contains("instanovo-custom"));
+        Assert.assertTrue(advancedCommand.contains("instanovoplus-custom"));
+        Assert.assertTrue(advancedCommand.contains("num_beams=17"));
+        Assert.assertTrue(advancedCommand.contains("use_knapsack=true"));
+        Assert.assertTrue(advancedCommand.contains("save_all_predictions=false"));
+        Assert.assertTrue(advancedCommand.contains("batch_size=64"));
+        Assert.assertTrue(advancedCommand.contains("force_cpu=true"));
     }
 
     /**
@@ -128,7 +160,13 @@ public class InstaNovoProcessBuilderTest extends TestCase {
             mode = InstaNovoProcessBuilder.Mode.transformer;
         }
 
-        Assert.assertEquals(type, new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, mode, null, null).getType());
+        Assert.assertTrue(command.contains("num_beams=5"));
+        Assert.assertTrue(command.contains("use_knapsack=false"));
+        Assert.assertTrue(command.contains("save_all_predictions=true"));
+        Assert.assertTrue(command.contains("force_cpu=false"));
+        Assert.assertFalse(command.contains("batch_size=-1"));
+
+        Assert.assertEquals(type, new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, mode, new InstaNovoParameters(), null, null).getType());
     }
 
     /**

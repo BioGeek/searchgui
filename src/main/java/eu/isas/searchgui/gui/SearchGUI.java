@@ -76,6 +76,8 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.AndromedaParameters;
 import com.compomics.util.parameters.identification.tool_specific.CometParameters;
 import com.compomics.util.parameters.identification.tool_specific.DirecTagParameters;
+import com.compomics.util.parameters.identification.tool_specific.InstaNovoParameters;
+import com.compomics.util.parameters.identification.tool_specific.InstaNovoPlusParameters;
 import com.compomics.util.parameters.identification.tool_specific.MsAmandaParameters;
 import com.compomics.util.parameters.identification.tool_specific.MsgfParameters;
 import com.compomics.util.parameters.identification.tool_specific.MyriMatchParameters;
@@ -730,6 +732,9 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         instaNovoLinkLabel = new javax.swing.JLabel();
         instaNovoPlusLinkLabel = new javax.swing.JLabel();
         instaNovoRefineLinkLabel = new javax.swing.JLabel();
+        instaNovoSettingsButton = new javax.swing.JButton();
+        instaNovoPlusSettingsButton = new javax.swing.JButton();
+        instaNovoRefineSettingsButton = new javax.swing.JButton();
         enableMetaMorpheusJCheckBox = new javax.swing.JCheckBox();
         metaMorpheusButton = new javax.swing.JButton();
         metaMorpheusSupportButton = new javax.swing.JButton();
@@ -1846,6 +1851,9 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                             .addComponent(andromedaSettingsButton)
                             .addComponent(novorSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(direcTagSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoPlusSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoRefineSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(metaMorpheusSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sageSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(10, 10, 10))
@@ -1858,11 +1866,11 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                             .addComponent(enableInstaNovoRefineJCheckBox))
                         .addGap(61, 61, 61)
                         .addGroup(searchEnginesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(novorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(direcTagButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(instaNovoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(instaNovoPlusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(instaNovoRefineButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(novorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(direcTagButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoPlusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoRefineButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(searchEnginesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(novorSupportButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1882,7 +1890,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
 
         searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {andromedaButton, cometButton, direcTagButton, instaNovoButton, instaNovoPlusButton, instaNovoRefineButton, metaMorpheusButton, msAmandaButton, msgfButton, myriMatchButton, novorButton, omssaButton, tideButton, xtandemButton});
 
-        searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {andromedaSettingsButton, cometSettingsButton, direcTagSettingsButton, metaMorpheusSettingsButton, msAmandaSettingsButton, msgfSettingsButton, myriMatchSettingsButton, novorSettingsButton, omssaSettingsButton, sageSettingsButton, tideSettingsButton, xtandemSettingsButton});
+        searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {andromedaSettingsButton, cometSettingsButton, direcTagSettingsButton, instaNovoSettingsButton, instaNovoPlusSettingsButton, instaNovoRefineSettingsButton, metaMorpheusSettingsButton, msAmandaSettingsButton, msgfSettingsButton, myriMatchSettingsButton, novorSettingsButton, omssaSettingsButton, sageSettingsButton, tideSettingsButton, xtandemSettingsButton});
 
         searchEnginesPanelLayout.setVerticalGroup(
             searchEnginesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1974,24 +1982,27 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                     .addComponent(enableInstaNovoJCheckBox)
                     .addComponent(instaNovoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(instaNovoLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(instaNovoSupportButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(instaNovoSupportButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(instaNovoSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(searchEnginesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(enableInstaNovoPlusJCheckBox)
                     .addComponent(instaNovoPlusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(instaNovoPlusLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(instaNovoPlusSupportButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(instaNovoPlusSupportButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(instaNovoPlusSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(searchEnginesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(enableInstaNovoRefineJCheckBox)
                     .addComponent(instaNovoRefineButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(instaNovoRefineLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(instaNovoRefineSupportButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(instaNovoRefineSupportButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(instaNovoRefineSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {andromedaButton, cometButton, metaMorpheusButton, msAmandaButton, msgfButton, myriMatchButton, omssaButton, tideButton, xtandemButton});
 
-        searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {andromedaSettingsButton, cometSettingsButton, metaMorpheusSettingsButton, msAmandaSettingsButton, msgfSettingsButton, myriMatchSettingsButton, omssaSettingsButton, tideSettingsButton, xtandemSettingsButton});
+        searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {andromedaSettingsButton, cometSettingsButton, instaNovoSettingsButton, instaNovoPlusSettingsButton, instaNovoRefineSettingsButton, metaMorpheusSettingsButton, msAmandaSettingsButton, msgfSettingsButton, myriMatchSettingsButton, omssaSettingsButton, tideSettingsButton, xtandemSettingsButton});
 
         searchEnginesScrollPane.setViewportView(searchEnginesPanel);
 
@@ -2710,7 +2721,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
 
         configureInstaNovoButton(instaNovoButton, "InstaNovo", "Enable InstaNovo");
         configureInstaNovoButton(instaNovoPlusButton, "InstaNovo+", "Enable InstaNovo+");
-        configureInstaNovoButton(instaNovoRefineButton, "InstaNovo + refine", "Enable InstaNovo with InstaNovo+ refinement");
+        configureInstaNovoButton(instaNovoRefineButton, "InstaNovo with refinement", "Enable InstaNovo with InstaNovo+ refinement");
 
         instaNovoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2732,9 +2743,29 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         configureInstaNovoSupportButton(instaNovoPlusSupportButton);
         configureInstaNovoSupportButton(instaNovoRefineSupportButton);
 
-        configureInstaNovoLinkLabel(instaNovoLinkLabel);
-        configureInstaNovoLinkLabel(instaNovoPlusLinkLabel);
-        configureInstaNovoLinkLabel(instaNovoRefineLinkLabel);
+        configureInstaNovoDescriptionLabel(instaNovoLinkLabel, "De novo peptide sequencing with transformer based InstaNovo model");
+        configureInstaNovoDescriptionLabel(instaNovoPlusLinkLabel, "De novo peptide sequencing with diffusion based InstaNovo+ model");
+        configureInstaNovoDescriptionLabel(instaNovoRefineLinkLabel, "Refine InstaNovo predictions with InstaNovo+");
+
+        configureInstaNovoSettingsButton(instaNovoSettingsButton, "Edit InstaNovo Advanced Settings");
+        configureInstaNovoSettingsButton(instaNovoPlusSettingsButton, "Edit InstaNovo+ Advanced Settings");
+        configureInstaNovoSettingsButton(instaNovoRefineSettingsButton, "Edit InstaNovo Refinement Advanced Settings");
+
+        instaNovoSettingsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editInstaNovoSettings(false, true, false);
+            }
+        });
+        instaNovoPlusSettingsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editInstaNovoSettings(true, false, true);
+            }
+        });
+        instaNovoRefineSettingsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editInstaNovoSettings(false, true, true);
+            }
+        });
 
     }
 
@@ -2792,23 +2823,32 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
     }
 
     /**
-     * Configures an InstaNovo web link label.
+     * Configures an InstaNovo description label.
      *
      * @param label the label
+     * @param description the description text
      */
-    private void configureInstaNovoLinkLabel(javax.swing.JLabel label) {
+    private void configureInstaNovoDescriptionLabel(javax.swing.JLabel label, String description) {
         label.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        label.setForeground(new java.awt.Color(0, 0, 255));
-        label.setText("<html><a href>Website</a></html>");
+        label.setText(description);
         label.setEnabled(false);
-        label.setPreferredSize(new java.awt.Dimension(68, 25));
-        label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-                BareBonesBrowserLaunch.openURL("https://github.com/instadeepai/instanovo");
-                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-            }
+    }
 
+    /**
+     * Configures an InstaNovo settings button.
+     *
+     * @param button the button
+     * @param toolTip the tooltip
+     */
+    private void configureInstaNovoSettingsButton(javax.swing.JButton button, String toolTip) {
+        button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        button.setToolTipText(toolTip);
+        button.setBorder(null);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setEnabled(false);
+        button.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             }
@@ -2817,6 +2857,125 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                 setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }
         });
+    }
+
+    /**
+     * Edit the InstaNovo advanced settings.
+     *
+     * @param plusParameters if true, edits the standalone InstaNovo+ parameter object
+     * @param showInstaNovoModel show the InstaNovo model field
+     * @param showInstaNovoPlusModel show the InstaNovo+ model field
+     */
+    private void editInstaNovoSettings(boolean plusParameters, boolean showInstaNovoModel, boolean showInstaNovoPlusModel) {
+
+        SearchParameters searchParameters = identificationParameters.getSearchParameters();
+        int advocateIndex = plusParameters ? Advocate.instanovoPlus.getIndex() : Advocate.instanovo.getIndex();
+        Object oldParameters = searchParameters.getIdentificationAlgorithmParameter(advocateIndex);
+        InstaNovoParameters instaNovoParameters = oldParameters instanceof InstaNovoParameters
+                ? copyInstaNovoParameters((InstaNovoParameters) oldParameters, plusParameters)
+                : (plusParameters ? new InstaNovoPlusParameters() : new InstaNovoParameters());
+
+        JTextField instaNovoModelTxt = new JTextField(instaNovoParameters.getInstaNovoModel());
+        JTextField instaNovoPlusModelTxt = new JTextField(instaNovoParameters.getInstaNovoPlusModel());
+        JTextField configPathTxt = new JTextField(instaNovoParameters.getConfigFile() == null ? "" : instaNovoParameters.getConfigFile());
+        JSpinner numberOfBeamsSpinner = new JSpinner(new SpinnerNumberModel(instaNovoParameters.getNumberOfBeams(), 1, 1000, 1));
+        JComboBox<String> beamSearchCombo = new JComboBox<>(new String[]{"Standard beam search", "Knapsack beam search"});
+        beamSearchCombo.setSelectedIndex(instaNovoParameters.isUseKnapsack() ? 1 : 0);
+        JCheckBox saveAllPredictionsCheckBox = new JCheckBox("Save all beam predictions", instaNovoParameters.isSaveAllPredictions());
+        JSpinner batchSizeSpinner = new JSpinner(new SpinnerNumberModel(instaNovoParameters.getBatchSize(), -1, 100000, 1));
+        JCheckBox forceCpuCheckBox = new JCheckBox("Force CPU execution", instaNovoParameters.isForceCpu());
+
+        JPanel panel = new JPanel(new java.awt.GridLayout(0, 2, 5, 5));
+
+        if (showInstaNovoModel) {
+            panel.add(new JLabel("InstaNovo model"));
+            panel.add(instaNovoModelTxt);
+        }
+
+        if (showInstaNovoPlusModel) {
+            panel.add(new JLabel("InstaNovo+ model"));
+            panel.add(instaNovoPlusModelTxt);
+        }
+
+        panel.add(new JLabel("Number of beams"));
+        panel.add(numberOfBeamsSpinner);
+        panel.add(new JLabel("Beam search"));
+        panel.add(beamSearchCombo);
+        panel.add(new JLabel("Predictions"));
+        panel.add(saveAllPredictionsCheckBox);
+        panel.add(new JLabel("Batch size (-1 uses default)"));
+        panel.add(batchSizeSpinner);
+        panel.add(new JLabel("Config path"));
+        panel.add(configPathTxt);
+        panel.add(new JLabel("Device"));
+        panel.add(forceCpuCheckBox);
+
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                panel,
+                showInstaNovoModel && showInstaNovoPlusModel
+                        ? "InstaNovo Refinement Advanced Settings"
+                        : (plusParameters ? "InstaNovo+ Advanced Settings" : "InstaNovo Advanced Settings"),
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (option == JOptionPane.OK_OPTION) {
+
+            if (showInstaNovoModel && instaNovoModelTxt.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "The InstaNovo model cannot be empty.", "Input Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (showInstaNovoPlusModel && instaNovoPlusModelTxt.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "The InstaNovo+ model cannot be empty.", "Input Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (showInstaNovoModel) {
+                instaNovoParameters.setInstaNovoModel(instaNovoModelTxt.getText().trim());
+            }
+
+            if (showInstaNovoPlusModel) {
+                instaNovoParameters.setInstaNovoPlusModel(instaNovoPlusModelTxt.getText().trim());
+            }
+
+            String configPath = configPathTxt.getText().trim();
+            instaNovoParameters.setConfigFile(configPath.isEmpty() ? null : configPath);
+            instaNovoParameters.setNumberOfBeams((Integer) numberOfBeamsSpinner.getValue());
+            instaNovoParameters.setUseKnapsack(beamSearchCombo.getSelectedIndex() == 1);
+            instaNovoParameters.setSaveAllPredictions(saveAllPredictionsCheckBox.isSelected());
+            instaNovoParameters.setBatchSize((Integer) batchSizeSpinner.getValue());
+            instaNovoParameters.setForceCpu(forceCpuCheckBox.isSelected());
+
+            searchParameters.setIdentificationAlgorithmParameter(advocateIndex, instaNovoParameters);
+            validateInput(false);
+
+        }
+    }
+
+    /**
+     * Copies InstaNovo parameters.
+     *
+     * @param oldParameters the old parameters
+     * @param plusParameters whether to create InstaNovo+ parameters
+     *
+     * @return a copy of the parameters
+     */
+    private InstaNovoParameters copyInstaNovoParameters(InstaNovoParameters oldParameters, boolean plusParameters) {
+
+        InstaNovoParameters result = plusParameters ? new InstaNovoPlusParameters() : new InstaNovoParameters();
+        result.setInstaNovoModel(oldParameters.getInstaNovoModel());
+        result.setInstaNovoPlusModel(oldParameters.getInstaNovoPlusModel());
+        result.setConfigFile(oldParameters.getConfigFile());
+        result.setNumberOfBeams(oldParameters.getNumberOfBeams());
+        result.setUseKnapsack(oldParameters.isUseKnapsack());
+        result.setSaveAllPredictions(oldParameters.isSaveAllPredictions());
+        result.setBatchSize(oldParameters.getBatchSize());
+        result.setForceCpu(oldParameters.isForceCpu());
+
+        return result;
+
     }
 
     /**
@@ -7078,10 +7237,13 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
     private javax.swing.JLabel instaNovoLinkLabel;
     private javax.swing.JButton instaNovoPlusButton;
     private javax.swing.JLabel instaNovoPlusLinkLabel;
+    private javax.swing.JButton instaNovoPlusSettingsButton;
     private javax.swing.JButton instaNovoPlusSupportButton;
     private javax.swing.JButton instaNovoRefineButton;
     private javax.swing.JLabel instaNovoRefineLinkLabel;
+    private javax.swing.JButton instaNovoRefineSettingsButton;
     private javax.swing.JButton instaNovoRefineSupportButton;
+    private javax.swing.JButton instaNovoSettingsButton;
     private javax.swing.JButton instaNovoSupportButton;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
@@ -9310,6 +9472,9 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         instaNovoSupportButton.setEnabled(enable);
         instaNovoPlusSupportButton.setEnabled(enable);
         instaNovoRefineSupportButton.setEnabled(enable);
+        instaNovoSettingsButton.setEnabled(enable);
+        instaNovoPlusSettingsButton.setEnabled(enable);
+        instaNovoRefineSettingsButton.setEnabled(enable);
         instaNovoLinkLabel.setEnabled(enable);
         instaNovoPlusLinkLabel.setEnabled(enable);
         instaNovoRefineLinkLabel.setEnabled(enable);
