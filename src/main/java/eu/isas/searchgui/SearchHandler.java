@@ -2961,7 +2961,9 @@ public class SearchHandler {
                             File rawFile = rawFiles.get(i);
                             String rawFileName = rawFile.getName();
                             File folder = rawFile.getParentFile();
-                            String msFileName = IoUtil.removeExtension(rawFileName) + thermoRawFileParserParameters.getOutputFormat().fileNameEnding.toLowerCase();
+                            // use the exact extension produced by ThermoRawFileParser (e.g. .mzML) so the
+                            // converted file is found on case-sensitive file systems
+                            String msFileName = IoUtil.removeExtension(rawFileName) + thermoRawFileParserParameters.getOutputFormat().fileNameEnding;
                             File msFile = new File(folder, msFileName);
 
                             // Check whether the file exists but with a different case for the extension.
