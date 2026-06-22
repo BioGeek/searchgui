@@ -314,18 +314,33 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
                 } else {
 
                     processDuration.end();
-                    waitingHandler.appendReportEndLine();
-                    waitingHandler.appendReportEndLine();
-                    waitingHandler.appendReport(getType() + " finished for " + getCurrentlyProcessedFileName() + " (" + processDuration.toString() + ").", true, true);
-                    waitingHandler.appendReportEndLine();
 
-                    // wait for process to terminate before exiting
+                    // wait for process to terminate before reporting success
                     try {
-                        p.waitFor();
+
+                        int exitCode = p.waitFor();
+
+                        if (exitCode == 0) {
+                            waitingHandler.appendReportEndLine();
+                            waitingHandler.appendReportEndLine();
+                            waitingHandler.appendReport(getType() + " finished for " + getCurrentlyProcessedFileName() + " (" + processDuration.toString() + ").", true, true);
+                            waitingHandler.appendReportEndLine();
+                        } else {
+                            waitingHandler.appendReportEndLine();
+                            waitingHandler.appendReport(getType() + " failed for " + getCurrentlyProcessedFileName() + " with exit code " + exitCode + ".", true, true);
+                            waitingHandler.setRunCanceled();
+                        }
+
                     } catch (InterruptedException e) {
+
                         if (p != null) {
                             p.destroy();
                         }
+
+                        waitingHandler.appendReportEndLine();
+                        waitingHandler.appendReport(getType() + " was interrupted for " + getCurrentlyProcessedFileName() + ".", true, true);
+                        waitingHandler.setRunCanceled();
+                        Thread.currentThread().interrupt();
                     }
                 }
             }

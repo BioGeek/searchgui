@@ -2919,7 +2919,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         JComboBox<String> beamSearchCombo = new JComboBox<>(new String[]{"Standard beam search", "Knapsack beam search"});
         beamSearchCombo.setSelectedIndex(instaNovoParameters.isUseKnapsack() ? 1 : 0);
         JCheckBox saveAllPredictionsCheckBox = new JCheckBox("Save all beam predictions", instaNovoParameters.isSaveAllPredictions());
-        JSpinner batchSizeSpinner = new JSpinner(new SpinnerNumberModel(instaNovoParameters.getBatchSize(), -1, 100000, 1));
+        JSpinner batchSizeSpinner = new JSpinner(new SpinnerNumberModel(instaNovoParameters.getBatchSize(), 1, 100000, 1));
         JCheckBox forceCpuCheckBox = new JCheckBox("Force CPU execution", instaNovoParameters.isForceCpu());
 
         JPanel panel = new JPanel(new java.awt.GridLayout(0, 2, 5, 5));
@@ -2940,7 +2940,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         panel.add(beamSearchCombo);
         panel.add(new JLabel("Predictions"));
         panel.add(saveAllPredictionsCheckBox);
-        panel.add(new JLabel("Batch size (-1 uses InstaNovo default)"));
+        panel.add(new JLabel("Batch size"));
         panel.add(batchSizeSpinner);
         panel.add(new JLabel("Config path"));
         panel.add(configPathTxt);

@@ -1,6 +1,8 @@
 package eu.isas.searchgui.processbuilders;
 
+import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerDummy;
 import com.compomics.util.parameters.identification.tool_specific.InstaNovoParameters;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.util.List;
 import junit.framework.TestCase;
@@ -99,6 +101,18 @@ public class InstaNovoProcessBuilderTest extends TestCase {
         Assert.assertTrue(advancedCommand.contains("force_cpu=true"));
         Assert.assertTrue(advancedCommand.contains("log_interval=1"));
 
+        InstaNovoParameters legacyParameters = new InstaNovoParameters();
+        legacyParameters.setBatchSize(-1);
+        Assert.assertTrue(new InstaNovoProcessBuilder(
+                instaNovoFolder,
+                spectrumFile,
+                outputFile,
+                InstaNovoProcessBuilder.Mode.transformer,
+                legacyParameters,
+                null,
+                null
+        ).getCommand().contains("batch_size=" + InstaNovoParameters.DEFAULT_BATCH_SIZE));
+
         InstaNovoProcessBuilder processBuilder = new InstaNovoProcessBuilder(
                 instaNovoFolder,
                 spectrumFile,
@@ -133,6 +147,23 @@ public class InstaNovoProcessBuilderTest extends TestCase {
                 SearchGUIProcessBuilder.parseInstaNovoProgressPercentage("\u001B[32mINFO\u001B[0m Rows filtered: 12.50%")
         );
         Assert.assertNull(SearchGUIProcessBuilder.parseInstaNovoProgressPercentage("Loading model..."));
+    }
+
+    /**
+     * Tests that non-zero external process exits cancel the run.
+     *
+     * @throws Exception if an exception occurs
+     */
+    public void testFailedProcessCancelsRun() throws Exception {
+
+        TestWaitingHandler waitingHandler = new TestWaitingHandler();
+        TestProcessBuilder processBuilder = new TestProcessBuilder(waitingHandler, "echo failing; exit 7");
+
+        processBuilder.startProcess();
+
+        Assert.assertTrue(waitingHandler.isRunCanceled());
+        Assert.assertTrue(waitingHandler.report.toString().contains("failed for input.mgf with exit code 7"));
+        Assert.assertFalse(waitingHandler.report.toString().contains("finished for input.mgf"));
     }
 
     /**
@@ -261,5 +292,76 @@ public class InstaNovoProcessBuilderTest extends TestCase {
         folder.deleteOnExit();
 
         return folder;
+    }
+
+    /**
+     * Test process builder.
+     */
+    private static class TestProcessBuilder extends SearchGUIProcessBuilder {
+
+        /**
+         * Constructor.
+         *
+         * @param waitingHandler the waiting handler
+         * @param command the shell command
+         */
+        private TestProcessBuilder(WaitingHandler waitingHandler, String command) {
+
+            this.waitingHandler = waitingHandler;
+            process_name_array.add("sh");
+            process_name_array.add("-c");
+            process_name_array.add(command);
+            pb = new ProcessBuilder(process_name_array);
+            pb.redirectErrorStream(true);
+        }
+
+        @Override
+        public String getType() {
+            return "TestTool";
+        }
+
+        @Override
+        public String getCurrentlyProcessedFileName() {
+            return "input.mgf";
+        }
+    }
+
+    /**
+     * Test waiting handler.
+     */
+    private static class TestWaitingHandler extends WaitingHandlerDummy {
+
+        /**
+         * Whether the run was canceled.
+         */
+        private boolean runCanceled = false;
+        /**
+         * The report.
+         */
+        private final StringBuilder report = new StringBuilder();
+
+        @Override
+        public void setRunCanceled() {
+            runCanceled = true;
+        }
+
+        @Override
+        public void appendReport(String report, boolean includeDate, boolean addNewLine) {
+            this.report.append(report);
+            if (addNewLine) {
+                this.report.append(System.getProperty("line.separator"));
+            }
+        }
+
+        @Override
+        public void appendReportEndLine() {
+            report.append(System.getProperty("line.separator"));
+        }
+
+        @Override
+        public boolean isRunCanceled() {
+            return runCanceled;
+        }
+
     }
 }
