@@ -218,6 +218,10 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
      */
     public static final String MODIFICATION_USE_SEPARATOR = "_";
     /**
+     * The InstaNovo documentation URL.
+     */
+    private static final String INSTANOVO_DOCUMENTATION_URL = "https://instadeepai.github.io/InstaNovo/";
+    /**
      * If true, then one of the currently processed spectra has duplicate
      * titles.
      */
@@ -2831,8 +2835,24 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
      */
     private void configureInstaNovoDescriptionLabel(javax.swing.JLabel label, String description) {
         label.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        label.setText(description);
+        label.setText("<html><a style=\"text-decoration: none\" href=\"" + INSTANOVO_DOCUMENTATION_URL + "\">" + description + "</a></html> ");
+        label.setToolTipText("Open the InstaNovo documentation");
         label.setEnabled(false);
+        label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+                BareBonesBrowserLaunch.openURL(INSTANOVO_DOCUMENTATION_URL);
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            }
+
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            }
+        });
     }
 
     /**
