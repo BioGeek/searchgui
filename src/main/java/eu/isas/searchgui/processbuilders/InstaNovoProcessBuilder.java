@@ -151,7 +151,7 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
      *
      * @return the executable
      */
-    private File getExecutable(File instaNovoFolder) {
+    public static File getExecutable(File instaNovoFolder) {
 
         if (instaNovoFolder != null) {
 

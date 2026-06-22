@@ -1110,6 +1110,11 @@ public class SearchCLIInputBean {
             }
         }
 
+        if (!isSearchEngineOrDeNovoAlgorithmSelected(aLine)) {
+            System.out.println(System.getProperty("line.separator") + "No search engine or de novo algorithm selected." + System.getProperty("line.separator"));
+            return false;
+        }
+
         // check the search engine folders
         if (aLine.hasOption(SearchCLIParams.OMSSA_LOCATION.id)) {
             String input = aLine.getOptionValue(SearchCLIParams.OMSSA_LOCATION.id);
@@ -1288,6 +1293,24 @@ public class SearchCLIInputBean {
                 || isEnabled(aLine, SearchCLIParams.ANDROMEDA)
                 || isEnabled(aLine, SearchCLIParams.META_MORPHEUS)
                 || isEnabled(aLine, SearchCLIParams.SAGE);
+    }
+
+    /**
+     * Returns true if any command line search engine or de novo algorithm is
+     * selected.
+     *
+     * @param aLine the command line
+     *
+     * @return true if an engine or de novo algorithm is selected
+     */
+    private static boolean isSearchEngineOrDeNovoAlgorithmSelected(CommandLine aLine) {
+
+        return isDatabaseSearchSelected(aLine)
+                || isEnabled(aLine, SearchCLIParams.NOVOR)
+                || isEnabled(aLine, SearchCLIParams.INSTANOVO)
+                || isEnabled(aLine, SearchCLIParams.INSTANOVO_PLUS)
+                || isEnabled(aLine, SearchCLIParams.INSTANOVO_REFINE)
+                || isEnabled(aLine, SearchCLIParams.DIRECTAG);
     }
 
     /**

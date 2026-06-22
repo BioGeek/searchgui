@@ -82,6 +82,13 @@ public class SearchCLIInstaNovoTest extends TestCase {
         );
         Assert.assertFalse(SearchCLIInputBean.isValidStartup(databaseSearchWithoutFasta));
 
+        CommandLine noEngineSelected = parse(
+                "-spectrum_files", createFile("input", ".mgf").getAbsolutePath(),
+                "-fasta_file", createFile("database", ".fasta").getAbsolutePath(),
+                "-output_folder", createFolder("searchgui-output").getAbsolutePath()
+        );
+        Assert.assertFalse(SearchCLIInputBean.isValidStartup(noEngineSelected));
+
         String help = SearchCLIParams.getOptionsAsString();
         Assert.assertTrue(help.contains("-instanovo"));
         Assert.assertTrue(help.contains("-instanovo_plus"));

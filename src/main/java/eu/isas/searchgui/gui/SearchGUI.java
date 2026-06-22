@@ -2899,8 +2899,9 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                 ? copyInstaNovoParameters((InstaNovoParameters) oldParameters, plusParameters)
                 : (plusParameters ? new InstaNovoPlusParameters() : new InstaNovoParameters());
 
-        JComboBox<String> instaNovoModelCmb = createInstaNovoModelComboBox("transformer", instaNovoParameters.getInstaNovoModel());
-        JComboBox<String> instaNovoPlusModelCmb = createInstaNovoModelComboBox("diffusion", instaNovoParameters.getInstaNovoPlusModel());
+        HashMap<String, ArrayList<String>> instaNovoModels = getInstaNovoModels(searchHandler.getInstaNovoLocation());
+        JComboBox<String> instaNovoModelCmb = createInstaNovoModelComboBox(instaNovoModels.get("transformer"), instaNovoParameters.getInstaNovoModel());
+        JComboBox<String> instaNovoPlusModelCmb = createInstaNovoModelComboBox(instaNovoModels.get("diffusion"), instaNovoParameters.getInstaNovoPlusModel());
 
         if ((showInstaNovoModel && instaNovoModelCmb.getItemCount() == 0)
                 || (showInstaNovoPlusModel && instaNovoPlusModelCmb.getItemCount() == 0)) {
@@ -2994,14 +2995,16 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
     /**
      * Creates a model combo box populated from the InstaNovo models file.
      *
-     * @param modelType the model type in models.json
+     * @param models the available models
      * @param selectedModel the selected model
      *
      * @return the model combo box
      */
-    private JComboBox<String> createInstaNovoModelComboBox(String modelType, String selectedModel) {
+    private JComboBox<String> createInstaNovoModelComboBox(ArrayList<String> models, String selectedModel) {
 
-        ArrayList<String> models = getInstaNovoModels(modelType);
+        if (models == null) {
+            models = new ArrayList<>();
+        }
 
         JComboBox<String> comboBox = new JComboBox<>(models.toArray(new String[0]));
         comboBox.setEditable(false);
@@ -3016,18 +3019,6 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
     /**
      * Returns the available InstaNovo models for the given type.
      *
-     * @param modelType the model type in models.json
-     *
-     * @return the available model ids
-     */
-    private ArrayList<String> getInstaNovoModels(String modelType) {
-
-        return getInstaNovoModels(searchHandler.getInstaNovoLocation(), modelType);
-    }
-
-    /**
-     * Returns the available InstaNovo models for the given type.
-     *
      * @param instaNovoLocation the InstaNovo installation folder
      * @param modelType the model type in models.json
      *
@@ -3035,7 +3026,22 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
      */
     static ArrayList<String> getInstaNovoModels(File instaNovoLocation, String modelType) {
 
-        ArrayList<String> result = new ArrayList<>();
+        HashMap<String, ArrayList<String>> models = getInstaNovoModels(instaNovoLocation);
+        ArrayList<String> result = models.get(modelType);
+
+        return result == null ? new ArrayList<>() : result;
+    }
+
+    /**
+     * Returns the available InstaNovo models.
+     *
+     * @param instaNovoLocation the InstaNovo installation folder
+     *
+     * @return the available model ids indexed by model type
+     */
+    static HashMap<String, ArrayList<String>> getInstaNovoModels(File instaNovoLocation) {
+
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
 
         if (instaNovoLocation == null) {
             return result;
@@ -3050,12 +3056,20 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         try (FileReader reader = new FileReader(modelsFile)) {
 
             JsonObject modelsJson = JsonParser.parseReader(reader).getAsJsonObject();
-            JsonObject modelSection = modelsJson.getAsJsonObject(modelType);
 
-            if (modelSection != null) {
+            for (Map.Entry<String, JsonElement> modelTypeEntry : modelsJson.entrySet()) {
 
-                for (Map.Entry<String, JsonElement> entry : modelSection.entrySet()) {
-                    result.add(entry.getKey());
+                JsonElement modelTypeElement = modelTypeEntry.getValue();
+
+                if (modelTypeElement.isJsonObject()) {
+
+                    ArrayList<String> models = new ArrayList<>();
+
+                    for (Map.Entry<String, JsonElement> modelEntry : modelTypeElement.getAsJsonObject().entrySet()) {
+                        models.add(modelEntry.getKey());
+                    }
+
+                    result.put(modelTypeEntry.getKey(), models);
                 }
             }
 
@@ -8982,14 +8996,13 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                     feedBackInDialog
             );
 
-        } else if (advocate == Advocate.instanovo || advocate == Advocate.instanovoPlus) {
+        } else if (advocate == Advocate.instanovo || advocate == Advocate.instanovoPlus || advocate == Advocate.instanovoRefined) {
 
             if (searchEngineLocation != null) {
 
-                File virtualEnvironmentExecutable = new File(searchEngineLocation, ".venv" + File.separator + "bin" + File.separator + InstaNovoProcessBuilder.EXECUTABLE_FILE_NAME);
-                File executable = new File(searchEngineLocation, InstaNovoProcessBuilder.EXECUTABLE_FILE_NAME);
+                File executable = InstaNovoProcessBuilder.getExecutable(searchEngineLocation);
 
-                if (virtualEnvironmentExecutable.exists() || executable.exists()) {
+                if (executable.exists()) {
                     return true;
                 }
             }

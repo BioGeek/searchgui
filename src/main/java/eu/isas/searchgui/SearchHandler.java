@@ -4130,7 +4130,7 @@ public class SearchHandler {
                             registerIdentificationFile(
                                     identificationFiles,
                                     spectrumFileName,
-                                    Advocate.instanovoPlus,
+                                    Advocate.instanovoRefined,
                                     instaNovoRefinedOutputFile,
                                     spectrumFile
                             );
@@ -4575,7 +4575,7 @@ public class SearchHandler {
 
                         }
 
-                        if (enableInstaNovoPlus || enableInstaNovoRefine) {
+                        if (enableInstaNovoPlus) {
 
                             File outputFile = getDefaultOutputFile(
                                     outputFolder,
@@ -4591,6 +4591,30 @@ public class SearchHandler {
 
                                 waitingHandler.appendReport(
                                         "Could not find " + Advocate.instanovoPlus.getName() + " results.",
+                                        true,
+                                        true
+                                );
+
+                            }
+
+                        }
+
+                        if (enableInstaNovoRefine) {
+
+                            File outputFile = getDefaultOutputFile(
+                                    outputFolder,
+                                    Advocate.instanovoRefined.getName(),
+                                    utilitiesUserParameters.isIncludeDateInOutputName()
+                            );
+
+                            if (outputFile.exists()) {
+
+                                identificationFilesList.add(outputFile);
+
+                            } else {
+
+                                waitingHandler.appendReport(
+                                        "Could not find " + Advocate.instanovoRefined.getName() + " results.",
                                         true,
                                         true
                                 );

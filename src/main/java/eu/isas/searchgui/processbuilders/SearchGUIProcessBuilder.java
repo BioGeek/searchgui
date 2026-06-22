@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -308,9 +309,7 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
 
                 // check if the user has cancelled the process or not
                 if (waitingHandler.isRunCanceled()) {
-                    if (p != null) {
-                        p.destroy();
-                    }
+                    terminateProcess();
                 } else {
 
                     processDuration.end();
@@ -333,9 +332,7 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
 
                     } catch (InterruptedException e) {
 
-                        if (p != null) {
-                            p.destroy();
-                        }
+                        terminateProcess();
 
                         waitingHandler.appendReportEndLine();
                         waitingHandler.appendReport(getType() + " was interrupted for " + getCurrentlyProcessedFileName() + ".", true, true);
@@ -351,8 +348,29 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
      * Ends the process.
      */
     public void endProcess() {
+        terminateProcess();
+    }
+
+    /**
+     * Terminates the external process.
+     */
+    private void terminateProcess() {
+
         if (p != null) {
+
             p.destroy();
+
+            try {
+
+                if (!p.waitFor(5, TimeUnit.SECONDS)) {
+                    p.destroyForcibly();
+                }
+
+            } catch (InterruptedException e) {
+
+                p.destroyForcibly();
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
