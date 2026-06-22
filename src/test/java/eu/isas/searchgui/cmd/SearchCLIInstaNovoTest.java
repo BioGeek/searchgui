@@ -38,6 +38,18 @@ public class SearchCLIInstaNovoTest extends TestCase {
         Assert.assertTrue(inputBean.isInstaNovoPlusEnabled());
         Assert.assertTrue(inputBean.isInstaNovoRefineEnabled());
         Assert.assertEquals(instaNovoFolder.getAbsoluteFile(), inputBean.getInstaNovoLocation().getAbsoluteFile());
+
+        CommandLine deNovoOnlyCommandLine = parse(
+                "-spectrum_files", createFile("input", ".mgf").getAbsolutePath(),
+                "-output_folder", createFolder("searchgui-output").getAbsolutePath(),
+                "-instanovo", "1",
+                "-instanovo_folder", instaNovoFolder.getAbsolutePath()
+        );
+
+        SearchCLIInputBean deNovoOnlyInputBean = new SearchCLIInputBean(deNovoOnlyCommandLine);
+
+        Assert.assertTrue(deNovoOnlyInputBean.isInstaNovoEnabled());
+        Assert.assertNull(deNovoOnlyInputBean.getFastaFile());
     }
 
     /**
@@ -63,11 +75,20 @@ public class SearchCLIInstaNovoTest extends TestCase {
         );
         Assert.assertFalse(SearchCLIInputBean.isValidStartup(missingFolder));
 
+        CommandLine databaseSearchWithoutFasta = parse(
+                "-spectrum_files", createFile("input", ".mgf").getAbsolutePath(),
+                "-output_folder", createFolder("searchgui-output").getAbsolutePath(),
+                "-msgf", "1"
+        );
+        Assert.assertFalse(SearchCLIInputBean.isValidStartup(databaseSearchWithoutFasta));
+
         String help = SearchCLIParams.getOptionsAsString();
         Assert.assertTrue(help.contains("-instanovo"));
         Assert.assertTrue(help.contains("-instanovo_plus"));
         Assert.assertTrue(help.contains("-instanovo_refine"));
         Assert.assertTrue(help.contains("-instanovo_folder"));
+        Assert.assertTrue(help.contains("Conditional Parameters"));
+        Assert.assertTrue(help.contains("optional for de novo-only searches"));
     }
 
     /**

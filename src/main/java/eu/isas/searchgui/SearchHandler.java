@@ -4883,7 +4883,7 @@ public class SearchHandler {
         try ( BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile))) {
 
             // add the fasta file
-            bw.write(fastaFile.getAbsolutePath() + System.getProperty("line.separator"));
+            bw.write((fastaFile == null ? "" : fastaFile.getAbsolutePath()) + System.getProperty("line.separator"));
 
             // add the ms files
             for (File spectrumFile : msFiles) {
@@ -5409,7 +5409,9 @@ public class SearchHandler {
                     dataFolder.mkdir();
 
                     // copy fasta file
-                    IoUtil.copyFile(fastaFile, new File(dataFolder, fastaFile.getName()));
+                    if (fastaFile != null) {
+                        IoUtil.copyFile(fastaFile, new File(dataFolder, fastaFile.getName()));
+                    }
 
                     // copy the spectrum files
                     for (File spectrumFile : getSpectrumFiles()) {
@@ -5757,7 +5759,7 @@ public class SearchHandler {
      */
     private long getTotalUncompressedSizeOfData(File spectrumFile, File cmsFile) {
 
-        long totalUncompressedSize = fastaFile.length();
+        long totalUncompressedSize = fastaFile == null ? 0 : fastaFile.length();
 
         if (spectrumFile != null) {
             totalUncompressedSize += spectrumFile.length();

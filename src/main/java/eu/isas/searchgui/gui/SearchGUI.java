@@ -7865,13 +7865,21 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
 
         }
 
-        if (databaseFileTxt.getText() == null || databaseFileTxt.getText().trim().equals("")) {
+        boolean databaseRequired = isDatabaseSearchSelected()
+                || peptideShakerCheckBox.isSelected();
+
+        if (databaseRequired
+                && (databaseFileTxt.getText() == null || databaseFileTxt.getText().trim().equals(""))) {
 
             if (showMessage && valid) {
 
+                String message = peptideShakerCheckBox.isSelected() && !isDatabaseSearchSelected()
+                        ? "You need to specify a search database when PeptideShaker post-processing is enabled."
+                        : "You need to specify a search database.";
+
                 JOptionPane.showMessageDialog(
                         this,
-                        "You need to specify a search database.",
+                        message,
                         "Search Database Not Found",
                         JOptionPane.WARNING_MESSAGE
                 );
@@ -7883,7 +7891,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
             databaseFileTxt.setToolTipText(null);
             valid = false;
 
-        } else {
+        } else if (databaseFileTxt.getText() != null && !databaseFileTxt.getText().trim().equals("")) {
 
             File test = new File(databaseFileTxt.getText().trim());
 
@@ -7905,6 +7913,10 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                 valid = false;
 
             }
+        } else {
+
+            databaseSettingsLbl.setToolTipText("A database file is optional for de novo-only searches");
+            databaseFileTxt.setToolTipText(null);
         }
 
         // validate the search parameters
@@ -7970,6 +7982,25 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         searchButton.setEnabled(valid);
         return valid;
 
+    }
+
+    /**
+     * Returns true if a selected engine requires a FASTA database.
+     *
+     * @return true if a FASTA database is required
+     */
+    private boolean isDatabaseSearchSelected() {
+
+        return enableOmssaJCheckBox.isSelected()
+                || enableXTandemJCheckBox.isSelected()
+                || enableMsgfJCheckBox.isSelected()
+                || enableMsAmandaJCheckBox.isSelected()
+                || enableMyriMatchJCheckBox.isSelected()
+                || enableCometJCheckBox.isSelected()
+                || enableTideJCheckBox.isSelected()
+                || enableAndromedaJCheckBox.isSelected()
+                || enableMetaMorpheusJCheckBox.isSelected()
+                || enableSageJCheckBox.isSelected();
     }
 
     /**

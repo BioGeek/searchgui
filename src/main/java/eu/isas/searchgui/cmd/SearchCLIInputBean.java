@@ -244,7 +244,9 @@ public class SearchCLIInputBean {
 
         // get the FASTA file
         String arg = aLine.getOptionValue(SearchCLIParams.FASTA_FILE.id);
-        fastaFile = new File(arg);
+        if (arg != null && !arg.trim().isEmpty()) {
+            fastaFile = new File(arg);
+        }
 
         // output folder
         arg = aLine.getOptionValue(SearchCLIParams.OUTPUT_FOLDER.id);
@@ -919,10 +921,14 @@ public class SearchCLIInputBean {
         }
 
         // check the FASTA file
-        if (!aLine.hasOption(SearchCLIParams.FASTA_FILE.id) || ((String) aLine.getOptionValue(SearchCLIParams.FASTA_FILE.id)).equals("")) {
+        boolean fastaRequired = isDatabaseSearchSelected(aLine);
+        boolean fastaProvided = aLine.hasOption(SearchCLIParams.FASTA_FILE.id)
+                && !((String) aLine.getOptionValue(SearchCLIParams.FASTA_FILE.id)).equals("");
+
+        if (fastaRequired && !fastaProvided) {
             System.out.println(System.getProperty("line.separator") + "FASTA file not specified." + System.getProperty("line.separator"));
             return false;
-        } else {
+        } else if (fastaProvided) {
             File file = new File(((String) aLine.getOptionValue(SearchCLIParams.FASTA_FILE.id)));
             if (!file.exists()) {
                 System.out.println(System.getProperty("line.separator") + "FASTA file \'" + file.getName() + "\' not found." + System.getProperty("line.separator"));
@@ -1261,6 +1267,41 @@ public class SearchCLIInputBean {
         }
 
         return true;
+    }
+
+    /**
+     * Returns true if a selected command line engine requires a FASTA database.
+     *
+     * @param aLine the command line
+     *
+     * @return true if a FASTA database is required
+     */
+    private static boolean isDatabaseSearchSelected(CommandLine aLine) {
+
+        return isEnabled(aLine, SearchCLIParams.OMSSA)
+                || isEnabled(aLine, SearchCLIParams.XTANDEM)
+                || isEnabled(aLine, SearchCLIParams.MSGF)
+                || isEnabled(aLine, SearchCLIParams.MS_AMANDA)
+                || isEnabled(aLine, SearchCLIParams.MYRIMATCH)
+                || isEnabled(aLine, SearchCLIParams.COMET)
+                || isEnabled(aLine, SearchCLIParams.TIDE)
+                || isEnabled(aLine, SearchCLIParams.ANDROMEDA)
+                || isEnabled(aLine, SearchCLIParams.META_MORPHEUS)
+                || isEnabled(aLine, SearchCLIParams.SAGE);
+    }
+
+    /**
+     * Returns true if the option is enabled on the command line.
+     *
+     * @param aLine the command line
+     * @param option the option
+     *
+     * @return true if the option is enabled
+     */
+    private static boolean isEnabled(CommandLine aLine, SearchCLIParams option) {
+
+        return aLine.hasOption(option.id)
+                && "1".equals(aLine.getOptionValue(option.id).trim());
     }
 
     /**
