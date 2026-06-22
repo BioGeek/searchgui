@@ -91,6 +91,9 @@ import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters;
 import com.compomics.util.parameters.identification.tool_specific.SageParameters;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.common.collect.Sets;
 import eu.isas.searchgui.SearchGUIWrapper;
 import eu.isas.searchgui.parameters.SearchGUIPathParameters;
@@ -2896,8 +2899,21 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                 ? copyInstaNovoParameters((InstaNovoParameters) oldParameters, plusParameters)
                 : (plusParameters ? new InstaNovoPlusParameters() : new InstaNovoParameters());
 
-        JTextField instaNovoModelTxt = new JTextField(instaNovoParameters.getInstaNovoModel());
-        JTextField instaNovoPlusModelTxt = new JTextField(instaNovoParameters.getInstaNovoPlusModel());
+        JComboBox<String> instaNovoModelCmb = createInstaNovoModelComboBox("transformer", instaNovoParameters.getInstaNovoModel());
+        JComboBox<String> instaNovoPlusModelCmb = createInstaNovoModelComboBox("diffusion", instaNovoParameters.getInstaNovoPlusModel());
+
+        if ((showInstaNovoModel && instaNovoModelCmb.getItemCount() == 0)
+                || (showInstaNovoPlusModel && instaNovoPlusModelCmb.getItemCount() == 0)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not read the InstaNovo model list from instanovo/models.json. Select the InstaNovo checkout root as the installation folder before editing advanced settings.",
+                    "InstaNovo Model List",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
         JTextField configPathTxt = new JTextField(instaNovoParameters.getConfigFile() == null ? "" : instaNovoParameters.getConfigFile());
         JSpinner numberOfBeamsSpinner = new JSpinner(new SpinnerNumberModel(instaNovoParameters.getNumberOfBeams(), 1, 1000, 1));
         JComboBox<String> beamSearchCombo = new JComboBox<>(new String[]{"Standard beam search", "Knapsack beam search"});
@@ -2910,12 +2926,12 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
 
         if (showInstaNovoModel) {
             panel.add(new JLabel("InstaNovo model"));
-            panel.add(instaNovoModelTxt);
+            panel.add(instaNovoModelCmb);
         }
 
         if (showInstaNovoPlusModel) {
             panel.add(new JLabel("InstaNovo+ model"));
-            panel.add(instaNovoPlusModelTxt);
+            panel.add(instaNovoPlusModelCmb);
         }
 
         panel.add(new JLabel("Number of beams"));
@@ -2943,22 +2959,22 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
 
         if (option == JOptionPane.OK_OPTION) {
 
-            if (showInstaNovoModel && instaNovoModelTxt.getText().trim().isEmpty()) {
+            if (showInstaNovoModel && instaNovoModelCmb.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(this, "The InstaNovo model cannot be empty.", "Input Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            if (showInstaNovoPlusModel && instaNovoPlusModelTxt.getText().trim().isEmpty()) {
+            if (showInstaNovoPlusModel && instaNovoPlusModelCmb.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(this, "The InstaNovo+ model cannot be empty.", "Input Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (showInstaNovoModel) {
-                instaNovoParameters.setInstaNovoModel(instaNovoModelTxt.getText().trim());
+                instaNovoParameters.setInstaNovoModel(instaNovoModelCmb.getSelectedItem().toString());
             }
 
             if (showInstaNovoPlusModel) {
-                instaNovoParameters.setInstaNovoPlusModel(instaNovoPlusModelTxt.getText().trim());
+                instaNovoParameters.setInstaNovoPlusModel(instaNovoPlusModelCmb.getSelectedItem().toString());
             }
 
             String configPath = configPathTxt.getText().trim();
@@ -2973,6 +2989,81 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
             validateInput(false);
 
         }
+    }
+
+    /**
+     * Creates a model combo box populated from the InstaNovo models file.
+     *
+     * @param modelType the model type in models.json
+     * @param selectedModel the selected model
+     *
+     * @return the model combo box
+     */
+    private JComboBox<String> createInstaNovoModelComboBox(String modelType, String selectedModel) {
+
+        ArrayList<String> models = getInstaNovoModels(modelType);
+
+        JComboBox<String> comboBox = new JComboBox<>(models.toArray(new String[0]));
+        comboBox.setEditable(false);
+
+        if (selectedModel != null && models.contains(selectedModel)) {
+            comboBox.setSelectedItem(selectedModel);
+        }
+
+        return comboBox;
+    }
+
+    /**
+     * Returns the available InstaNovo models for the given type.
+     *
+     * @param modelType the model type in models.json
+     *
+     * @return the available model ids
+     */
+    private ArrayList<String> getInstaNovoModels(String modelType) {
+
+        return getInstaNovoModels(searchHandler.getInstaNovoLocation(), modelType);
+    }
+
+    /**
+     * Returns the available InstaNovo models for the given type.
+     *
+     * @param instaNovoLocation the InstaNovo installation folder
+     * @param modelType the model type in models.json
+     *
+     * @return the available model ids
+     */
+    static ArrayList<String> getInstaNovoModels(File instaNovoLocation, String modelType) {
+
+        ArrayList<String> result = new ArrayList<>();
+
+        if (instaNovoLocation == null) {
+            return result;
+        }
+
+        File modelsFile = new File(instaNovoLocation, "instanovo" + File.separator + "models.json");
+
+        if (!modelsFile.exists()) {
+            return result;
+        }
+
+        try (FileReader reader = new FileReader(modelsFile)) {
+
+            JsonObject modelsJson = JsonParser.parseReader(reader).getAsJsonObject();
+            JsonObject modelSection = modelsJson.getAsJsonObject(modelType);
+
+            if (modelSection != null) {
+
+                for (Map.Entry<String, JsonElement> entry : modelSection.entrySet()) {
+                    result.add(entry.getKey());
+                }
+            }
+
+        } catch (Exception e) {
+            result.clear();
+        }
+
+        return result;
     }
 
     /**
