@@ -108,6 +108,25 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
                 ioe.printStackTrace();
             }
 
+            // the external process could not be started (e.g. the executable or a
+            // required runtime is missing); report the real cause and abort gracefully
+            // instead of failing later with a null process NPE
+            if (p == null) {
+
+                if (waitingHandler != null) {
+                    waitingHandler.appendReport(
+                            "Could not start " + getType() + ". Please verify that it is installed and on the path. "
+                            + "Note that .NET based tools such as ThermoRawFileParser require mono on Linux and macOS.",
+                            true,
+                            true
+                    );
+                    waitingHandler.setRunCanceled();
+                }
+
+                return;
+
+            }
+
             // get inputstream from process
             InputStream inputStream = p.getInputStream();
 
