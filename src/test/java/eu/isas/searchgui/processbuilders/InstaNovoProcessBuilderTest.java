@@ -123,6 +123,17 @@ public class InstaNovoProcessBuilderTest extends TestCase {
                 null
         );
         Assert.assertEquals(InstaNovoProcessBuilder.PRIMARY_PROGRESS_UNITS, processBuilder.getPrimaryProgressUnits());
+
+        File windowsInstaNovoFolder = createFolder("instanovo-windows-process");
+        File windowsExecutable = new File(windowsInstaNovoFolder, ".venv/Scripts/instanovo.exe");
+        windowsExecutable.getParentFile().mkdirs();
+        windowsExecutable.createNewFile();
+        windowsExecutable.deleteOnExit();
+
+        Assert.assertEquals(
+                windowsExecutable.getAbsolutePath(),
+                InstaNovoProcessBuilder.getExecutable(windowsInstaNovoFolder).getAbsolutePath()
+        );
     }
 
     /**

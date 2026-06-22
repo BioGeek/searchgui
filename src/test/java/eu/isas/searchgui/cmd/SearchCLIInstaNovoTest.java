@@ -1,6 +1,10 @@
 package eu.isas.searchgui.cmd;
 
+import eu.isas.searchgui.SearchHandler;
 import java.io.File;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import junit.framework.TestCase;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -96,6 +100,31 @@ public class SearchCLIInstaNovoTest extends TestCase {
         Assert.assertTrue(help.contains("-instanovo_folder"));
         Assert.assertTrue(help.contains("Conditional Parameters"));
         Assert.assertTrue(help.contains("optional for de novo-only searches"));
+    }
+
+    /**
+     * Tests that de novo-only input manifests do not contain blank FASTA lines.
+     *
+     * @throws Exception if an exception occurs
+     */
+    public void testDeNovoOnlyInputManifestHasNoBlankFastaLine() throws Exception {
+
+        File outputFolder = createFolder("searchgui-input-manifest");
+        File spectrumFile = createFile("input", ".mgf");
+
+        SearchHandler searchHandler = new SearchHandler();
+        searchHandler.setFastaFile(null);
+
+        ArrayList<File> spectrumFiles = new ArrayList<>();
+        spectrumFiles.add(spectrumFile);
+        searchHandler.setSpectrumFiles(spectrumFiles);
+        searchHandler.saveInputFile(outputFolder);
+
+        List<String> lines = Files.readAllLines(SearchHandler.getInputFile(outputFolder).toPath());
+
+        Assert.assertEquals(1, lines.size());
+        Assert.assertEquals(spectrumFile.getAbsolutePath(), lines.get(0));
+        Assert.assertFalse(lines.get(0).isEmpty());
     }
 
     /**

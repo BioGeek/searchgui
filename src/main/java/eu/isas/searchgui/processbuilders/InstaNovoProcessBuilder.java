@@ -155,21 +155,22 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
 
         if (instaNovoFolder != null) {
 
-            File virtualEnvironmentExecutable = new File(
-                    instaNovoFolder,
-                    ".venv" + File.separator + "bin" + File.separator + EXECUTABLE_FILE_NAME
-            );
+            String[] relativeExecutablePaths = {
+                ".venv" + File.separator + "bin" + File.separator + EXECUTABLE_FILE_NAME,
+                ".venv" + File.separator + "Scripts" + File.separator + EXECUTABLE_FILE_NAME,
+                ".venv" + File.separator + "Scripts" + File.separator + EXECUTABLE_FILE_NAME + ".exe",
+                EXECUTABLE_FILE_NAME,
+                EXECUTABLE_FILE_NAME + ".exe"
+            };
 
-            if (virtualEnvironmentExecutable.exists()) {
-                virtualEnvironmentExecutable.setExecutable(true);
-                return virtualEnvironmentExecutable;
-            }
+            for (String relativeExecutablePath : relativeExecutablePaths) {
 
-            File executable = new File(instaNovoFolder, EXECUTABLE_FILE_NAME);
+                File executable = new File(instaNovoFolder, relativeExecutablePath);
 
-            if (executable.exists()) {
-                executable.setExecutable(true);
-                return executable;
+                if (executable.exists()) {
+                    executable.setExecutable(true);
+                    return executable;
+                }
             }
         }
 

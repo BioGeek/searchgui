@@ -4923,7 +4923,9 @@ public class SearchHandler {
         try ( BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile))) {
 
             // add the fasta file
-            bw.write((fastaFile == null ? "" : fastaFile.getAbsolutePath()) + System.getProperty("line.separator"));
+            if (fastaFile != null) {
+                bw.write(fastaFile.getAbsolutePath() + System.getProperty("line.separator"));
+            }
 
             // add the ms files
             for (File spectrumFile : msFiles) {
@@ -5519,13 +5521,15 @@ public class SearchHandler {
         );
 
         // add the fasta file
-        ZipUtils.addFileToZip(
-                DEFAULT_DATA_FOLDER,
-                fastaFile,
-                out,
-                waitingHandler,
-                totalUncompressedSize
-        );
+        if (fastaFile != null) {
+            ZipUtils.addFileToZip(
+                    DEFAULT_DATA_FOLDER,
+                    fastaFile,
+                    out,
+                    waitingHandler,
+                    totalUncompressedSize
+            );
+        }
 
         // add the spectrum files
         for (File spectrumFile : getSpectrumFiles()) {
