@@ -97,6 +97,42 @@ public class InstaNovoProcessBuilderTest extends TestCase {
         Assert.assertTrue(advancedCommand.contains("save_all_predictions=false"));
         Assert.assertTrue(advancedCommand.contains("batch_size=64"));
         Assert.assertTrue(advancedCommand.contains("force_cpu=true"));
+        Assert.assertTrue(advancedCommand.contains("log_interval=1"));
+
+        InstaNovoProcessBuilder processBuilder = new InstaNovoProcessBuilder(
+                instaNovoFolder,
+                spectrumFile,
+                outputFile,
+                InstaNovoProcessBuilder.Mode.transformer,
+                defaultParameters,
+                null,
+                null
+        );
+        Assert.assertEquals(InstaNovoProcessBuilder.PRIMARY_PROGRESS_UNITS, processBuilder.getPrimaryProgressUnits());
+    }
+
+    /**
+     * Tests parsing InstaNovo progress output.
+     */
+    public void testInstaNovoProgressParsing() {
+
+        Assert.assertEquals(
+                Integer.valueOf(50),
+                SearchGUIProcessBuilder.parseInstaNovoProgressPercentage("[Batch 00050/00100] [00:10/00:20, 5.0it/s]:")
+        );
+        Assert.assertEquals(
+                Integer.valueOf(42),
+                SearchGUIProcessBuilder.parseInstaNovoProgressPercentage("Predicting:  42%|####2     | 42/100 [00:04<00:06, 7.5it/s]")
+        );
+        Assert.assertEquals(
+                Integer.valueOf(25),
+                SearchGUIProcessBuilder.parseInstaNovoProgressPercentage("25/100 [00:01<00:03]")
+        );
+        Assert.assertEquals(
+                Integer.valueOf(12),
+                SearchGUIProcessBuilder.parseInstaNovoProgressPercentage("\u001B[32mINFO\u001B[0m Rows filtered: 12.50%")
+        );
+        Assert.assertNull(SearchGUIProcessBuilder.parseInstaNovoProgressPercentage("Loading model..."));
     }
 
     /**
@@ -164,6 +200,7 @@ public class InstaNovoProcessBuilderTest extends TestCase {
         Assert.assertTrue(command.contains("use_knapsack=false"));
         Assert.assertTrue(command.contains("save_all_predictions=true"));
         Assert.assertTrue(command.contains("force_cpu=false"));
+        Assert.assertTrue(command.contains("log_interval=1"));
         Assert.assertFalse(command.contains("batch_size=-1"));
 
         Assert.assertEquals(type, new InstaNovoProcessBuilder(instaNovoFolder, spectrumFile, outputFile, mode, new InstaNovoParameters(), null, null).getType());

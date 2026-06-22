@@ -2738,13 +2738,13 @@ public class SearchHandler {
                     nProgress += nFilesToSearch;
                 }
                 if (enableInstaNovo) {
-                    nProgress += nFilesToSearch;
+                    nProgress += nFilesToSearch * InstaNovoProcessBuilder.PRIMARY_PROGRESS_UNITS;
                 }
                 if (enableInstaNovoPlus) {
-                    nProgress += nFilesToSearch;
+                    nProgress += nFilesToSearch * InstaNovoProcessBuilder.PRIMARY_PROGRESS_UNITS;
                 }
                 if (enableInstaNovoRefine) {
-                    nProgress += nFilesToSearch;
+                    nProgress += nFilesToSearch * InstaNovoProcessBuilder.PRIMARY_PROGRESS_UNITS;
                 }
                 if (enableDirecTag) {
                     nProgress += nFilesToSearch;
@@ -4062,7 +4062,7 @@ public class SearchHandler {
                                     instaNovoOutputFile,
                                     spectrumFile
                             );
-                            waitingHandler.increasePrimaryProgressCounter();
+                            completeProcessPrimaryProgress(instaNovoProcessBuilder);
                         }
                     }
 
@@ -4098,7 +4098,7 @@ public class SearchHandler {
                                     instaNovoPlusOutputFile,
                                     spectrumFile
                             );
-                            waitingHandler.increasePrimaryProgressCounter();
+                            completeProcessPrimaryProgress(instaNovoProcessBuilder);
                         }
                     }
 
@@ -4134,7 +4134,7 @@ public class SearchHandler {
                                     instaNovoRefinedOutputFile,
                                     spectrumFile
                             );
-                            waitingHandler.increasePrimaryProgressCounter();
+                            completeProcessPrimaryProgress(instaNovoProcessBuilder);
                         }
                     }
 
@@ -4868,6 +4868,20 @@ public class SearchHandler {
                     true,
                     true
             );
+        }
+    }
+
+    /**
+     * Completes the primary progress units allocated to a process.
+     *
+     * @param processBuilder the process builder
+     */
+    private void completeProcessPrimaryProgress(SearchGUIProcessBuilder processBuilder) {
+
+        int remainingProgress = processBuilder.getPrimaryProgressUnits() - processBuilder.getPrimaryProgressUnitsCompleted();
+
+        if (remainingProgress > 0) {
+            waitingHandler.increasePrimaryProgressCounter(remainingProgress);
         }
     }
 

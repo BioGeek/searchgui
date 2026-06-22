@@ -18,6 +18,11 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
      * The InstaNovo executable name.
      */
     public static final String EXECUTABLE_FILE_NAME = "instanovo";
+    /**
+     * The number of primary progress units allocated to one InstaNovo
+     * prediction run.
+     */
+    public static final int PRIMARY_PROGRESS_UNITS = 200;
 
     /**
      * InstaNovo execution modes.
@@ -67,6 +72,7 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
         this.mode = mode;
         this.waitingHandler = waitingHandler;
         this.exceptionHandler = exceptionHandler;
+        this.primaryProgressUnits = PRIMARY_PROGRESS_UNITS;
 
         if (instaNovoParameters == null) {
             instaNovoParameters = new InstaNovoParameters();
@@ -121,6 +127,7 @@ public class InstaNovoProcessBuilder extends SearchGUIProcessBuilder {
         }
 
         process_name_array.add("force_cpu=" + Boolean.toString(instaNovoParameters.isForceCpu()));
+        process_name_array.add("log_interval=1");
 
         process_name_array.trimToSize();
 
