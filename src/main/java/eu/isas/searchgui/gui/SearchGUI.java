@@ -1866,11 +1866,11 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                             .addComponent(enableInstaNovoRefineJCheckBox))
                         .addGap(61, 61, 61)
                         .addGroup(searchEnginesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(novorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(direcTagButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(instaNovoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(instaNovoPlusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(instaNovoRefineButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(novorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(direcTagButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoPlusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(instaNovoRefineButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(searchEnginesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(novorSupportButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1888,7 +1888,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
-        searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {andromedaButton, cometButton, direcTagButton, instaNovoButton, instaNovoPlusButton, instaNovoRefineButton, metaMorpheusButton, msAmandaButton, msgfButton, myriMatchButton, novorButton, omssaButton, tideButton, xtandemButton});
+        searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {andromedaButton, cometButton, direcTagButton, instaNovoButton, instaNovoPlusButton, instaNovoRefineButton, metaMorpheusButton, msAmandaButton, msgfButton, myriMatchButton, novorButton, omssaButton, sageButton, tideButton, xtandemButton});
 
         searchEnginesPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {andromedaSettingsButton, cometSettingsButton, direcTagSettingsButton, instaNovoSettingsButton, instaNovoPlusSettingsButton, instaNovoRefineSettingsButton, metaMorpheusSettingsButton, msAmandaSettingsButton, msgfSettingsButton, myriMatchSettingsButton, novorSettingsButton, omssaSettingsButton, sageSettingsButton, tideSettingsButton, xtandemSettingsButton});
 
@@ -2722,6 +2722,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
         configureInstaNovoButton(instaNovoButton, "InstaNovo", "Enable InstaNovo");
         configureInstaNovoButton(instaNovoPlusButton, "InstaNovo+", "Enable InstaNovo+");
         configureInstaNovoButton(instaNovoRefineButton, "InstaNovo with refinement", "Enable InstaNovo with InstaNovo+ refinement");
+        instaNovoRefineButton.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
 
         instaNovoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
