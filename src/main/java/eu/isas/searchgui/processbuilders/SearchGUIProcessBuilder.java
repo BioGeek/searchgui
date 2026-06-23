@@ -127,11 +127,7 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
 
             }
 
-            // get inputstream from process
-            InputStream inputStream = p.getInputStream();
-
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
 
                 if (isInstaNovoProcess()) {
 
@@ -139,7 +135,7 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
 
                 } else if (getType().equalsIgnoreCase("Comet")) {
 
-                    Scanner scanner = new Scanner(inputStream);
+                    Scanner scanner = new Scanner(bufferedReader);
                     scanner.useDelimiter("\n|\b ");
                     String lastString = "";
 
@@ -198,7 +194,7 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
                     }
                 } else if (getType().equalsIgnoreCase("ThermoRawFileParser")) {
 
-                    Scanner scanner = new Scanner(inputStream);
+                    Scanner scanner = new Scanner(bufferedReader);
                     scanner.useDelimiter("\\s|\\n");
 
                     waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -226,7 +222,7 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
 
                 } else if (getType().equalsIgnoreCase("MetaMorpheus")) {
 
-                    Scanner scanner = new Scanner(inputStream);
+                    Scanner scanner = new Scanner(bufferedReader);
                     scanner.useDelimiter("\\s|\\n");
 
                     waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -322,8 +318,6 @@ public abstract class SearchGUIProcessBuilder implements Runnable {
                     }
                 }
 
-                inputStream.close();
-                bufferedReader.close();
             } finally {
 
                 // check if the user has cancelled the process or not
