@@ -109,6 +109,7 @@ import eu.isas.searchgui.processbuilders.OmssaclProcessBuilder;
 import eu.isas.searchgui.processbuilders.SageProcessBuilder;
 import eu.isas.searchgui.processbuilders.TandemProcessBuilder;
 import eu.isas.searchgui.processbuilders.TideSearchProcessBuilder;
+import eu.isas.searchgui.util.InstaNovoSetup;
 import java.awt.Dimension;
 import java.lang.reflect.Field;
 import java.net.ConnectException;
@@ -3047,9 +3048,9 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
             return result;
         }
 
-        File modelsFile = new File(instaNovoLocation, "instanovo" + File.separator + "models.json");
+        File modelsFile = InstaNovoSetup.getModelsFile(instaNovoLocation);
 
-        if (!modelsFile.exists()) {
+        if (modelsFile == null || !modelsFile.exists()) {
             return result;
         }
 
@@ -3206,7 +3207,40 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
             return true;
         }
 
-        JFileChooser folderChooser = new JFileChooser(instaNovoLocation);
+        Object[] options = {"Install InstaNovo", "Select Existing Folder", "Cancel"};
+        int option = JOptionPane.showOptionDialog(
+                this,
+                "InstaNovo is required for the selected workflow.\n\n"
+                + "SearchGUI can install InstaNovo " + InstaNovoSetup.INSTANOVO_VERSION + " in a local virtual environment,\n"
+                + "or you can select an existing InstaNovo checkout or installation folder.",
+                "Install or Select InstaNovo",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        if (option == 0) {
+            return installInstaNovo(InstaNovoSetup.getDefaultInstallationFolder(), advocate);
+        } else if (option != 1) {
+            return false;
+        }
+
+        return selectInstaNovoLocation(advocate, instaNovoLocation);
+    }
+
+    /**
+     * Selects an existing InstaNovo location.
+     *
+     * @param advocate the InstaNovo advocate variant
+     * @param currentLocation the current location
+     *
+     * @return true if a valid location was selected
+     */
+    private boolean selectInstaNovoLocation(Advocate advocate, File currentLocation) {
+
+        JFileChooser folderChooser = new JFileChooser(currentLocation);
         folderChooser.setDialogTitle("Select the InstaNovo Installation Folder");
         folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         folderChooser.setMultiSelectionEnabled(false);
@@ -3222,6 +3256,86 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
 
         return false;
 
+    }
+
+    /**
+     * Installs InstaNovo in a local virtual environment.
+     *
+     * @param installationFolder the installation folder
+     * @param advocate the InstaNovo advocate variant
+     *
+     * @return true if the installation succeeded
+     */
+    private boolean installInstaNovo(File installationFolder, Advocate advocate) {
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Install InstaNovo " + InstaNovoSetup.INSTANOVO_VERSION + " into:\n"
+                + installationFolder.getAbsolutePath()
+                + "\n\n" + InstaNovoSetup.getInstallVariantDescription()
+                + "\n\nThis downloads uv if needed, a managed Python runtime, and Python dependencies.\n"
+                + "The InstaNovo model checkpoint will still be downloaded by InstaNovo on first use.",
+                "Install InstaNovo",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirm != JOptionPane.OK_OPTION) {
+            return false;
+        }
+
+        final ProgressDialogX installerDialog = new ProgressDialogX(
+                this,
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui.gif")),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui-orange.gif")),
+                true
+        );
+        installerDialog.setPrimaryProgressCounterIndeterminate(true);
+        installerDialog.setTitle("Installing InstaNovo. Please Wait...");
+
+        final boolean[] success = new boolean[]{false};
+        final Exception[] exception = new Exception[]{null};
+
+        Thread installerThread = new Thread("InstallInstaNovoThread") {
+            @Override
+            public void run() {
+                try {
+                    InstaNovoSetup.install(installationFolder, installerDialog);
+                    success[0] = true;
+                } catch (Exception e) {
+                    exception[0] = e;
+                } finally {
+                    installerDialog.setRunFinished();
+                }
+            }
+        };
+
+        installerThread.start();
+        installerDialog.setVisible(true);
+
+        if (!success[0]) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not install InstaNovo.\n\n" + (exception[0] == null ? "The installation was canceled." : exception[0].getMessage()),
+                    "InstaNovo Installation",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return false;
+        }
+
+        if (!InstaNovoProcessBuilder.getExecutable(installationFolder).exists()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "InstaNovo was installed, but the executable could not be found in " + installationFolder + ".",
+                    "InstaNovo Installation",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return false;
+        }
+
+        searchHandler.setInstaNovoLocation(installationFolder);
+
+        return validateSearchEngineInstallation(advocate, searchHandler.getInstaNovoLocation(), true);
     }
 
     /**
@@ -7778,7 +7892,7 @@ public class SearchGUI extends javax.swing.JFrame implements JavaHomeOrMemoryDia
             instaNovoValid = validateSearchEngineInstallation(
                     Advocate.instanovo,
                     searchHandler.getInstaNovoLocation(),
-                    showMessage
+                    false
             );
 
         }
